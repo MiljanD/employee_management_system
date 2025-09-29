@@ -24,11 +24,15 @@ class Club(Db):
             cursor.execute(query, (self.__club_name, ))
             self.con.commit()
 
+    def delete_club(self, club_id):
+        with self.con.cursor() as cursor:
+            query = "DELETE FROM employee_management_system.clubs WHERE id=%s"
+            cursor.execute(query, (club_id,))
+            self.con.commit()
+
+        return club_id
+
 
 
 if __name__ == "__main__":
     club = Club()
-    club.club = "moj klub"
-    print(club.club)
-    club.add_club()
-

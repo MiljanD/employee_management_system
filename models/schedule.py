@@ -1,6 +1,6 @@
 from models.db import Db
 from datetime import date
-from utils.input_prompts import generate_schedule_input_prompt
+from exports.exporter import Exporter
 
 
 class Schedule(Db):
@@ -62,12 +62,36 @@ class Schedule(Db):
             self.con.commit()
 
 
+    def remove_schedules_for_deleted_employee(self, employee_id):
+        with self.con.cursor() as cursor:
+            query = "DELETE FROM employee_management_system.schedule WHERE employee_id=%s"
+            cursor.execute(query, (employee_id,))
+            self.con.commit()
+
+
+    def remove_schedules_for_deleted_club(self, club_id):
+        with self.con.cursor() as cursor:
+            query = "DELETE FROM employee_management_system.schedule WHERE club_id=%s"
+            cursor.execute(query, (club_id,))
+            self.con.commit()
+
+
+    def delete_past_delegations(self):
+        current_schedule = Exporter()
+        schedule_data = current_schedule.export_complete_schedule()
+        for data in schedule_data:
+            if data["date_out"] < date.today():
+                with self.con.cursor() as cursor:
+                    query = "DELETE FROM employee_management_system.schedule WHERE id=%s"
+                    cursor.execute(query, (data["id"]))
+                    self.con.commit()
+
+
 
 if __name__ == "__main__":
     schedule = Schedule()
-    schedule_data = generate_schedule_input_prompt()
-    print(schedule_data)
+    schedule.club_id = 6
+    schedule.employee_id = 4
+    schedule.delegation_in = "26-09-2025"
+    schedule.delegation_out = "28-09-2025"
     schedule.generate_schedule()
-
-
-
