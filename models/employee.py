@@ -54,10 +54,11 @@ class Employee(Db):
 
 
     def add_delegation_to_employee(self, employee_id):
-        with self.con.cursor() as cursor:
-            query = "UPDATE employee_management_system.employees SET delegated=%s WHERE id=%s"
-            cursor.execute(query, (1, employee_id))
-            self.con.commit()
+            with self.con.cursor() as cursor:
+                query = "UPDATE employee_management_system.employees SET delegated=%s WHERE id=%s"
+                cursor.execute(query, (1, employee_id))
+                self.con.commit()
+
 
     def remove_employee_delegation(self):
         exports = Exporter()
@@ -77,12 +78,3 @@ class Employee(Db):
             query = f"UPDATE employee_management_system.employees SET {table_header}=%s WHERE id=%s"
             cursor.execute(query, (new_value, employee_id))
             self.con.commit()
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    employee1 = Employee()

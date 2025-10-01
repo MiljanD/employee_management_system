@@ -54,11 +54,46 @@ class Schedule(Db):
         self.end_date = self.__convert_date_input_to_date(end_date)
 
 
+    def check_employee_delegation(self):
+        exports = Exporter()
+        current_delegation = exports.export_actual_schedule()
+        if not current_delegation:
+            not_delegated = True
+        else:
+            for delegation in current_delegation:
+                if delegation["employee_id"] == self.employee_id:
+                    not_delegated = False
+                else:
+                    not_delegated = True
+
+        return not_delegated
+
     def generate_schedule(self):
+        if self.check_employee_delegation():
+            with self.con.cursor() as cursor:
+                query = ("INSERT INTO employee_management_system.schedule (club_id, employee_id, date_in, date_out) "
+                         "VALUES (%s, %s, %s, %s)")
+                cursor.execute(query, (self.club_id, self.employee_id, self.start_date, self.end_date))
+                self.con.commit()
+        else:
+            print("Zaposleni je vec delegiran.")
+
+
+    def delete_schedule_record(self, record_id):
         with self.con.cursor() as cursor:
-            query = ("INSERT INTO employee_management_system.schedule (club_id, employee_id, date_in, date_out) "
-                     "VALUES (%s, %s, %s, %s)")
-            cursor.execute(query, (self.club_id, self.employee_id, self.start_date, self.end_date))
+            query = "DELETE FROM employee_management_system.schedule WHERE id=%s"
+            cursor.execute(query, (record_id, ))
+            self.con.commit()
+
+
+    def update_schedule_record(self, record_id, clolumn_name, new_value):
+        value = new_value
+        if clolumn_name == "date_in" or clolumn_name == "date_out":
+            value = self.__convert_date_input_to_date(new_value)
+
+        with self.con.cursor() as cursor:
+            query = f"UPDATE employee_management_system.schedule SET {clolumn_name}=%s WHERE id=%s"
+            cursor.execute(query, (value, record_id))
             self.con.commit()
 
 
@@ -85,13 +120,3 @@ class Schedule(Db):
                     query = "DELETE FROM employee_management_system.schedule WHERE id=%s"
                     cursor.execute(query, (data["id"]))
                     self.con.commit()
-
-
-
-if __name__ == "__main__":
-    schedule = Schedule()
-    schedule.club_id = 6
-    schedule.employee_id = 4
-    schedule.delegation_in = "26-09-2025"
-    schedule.delegation_out = "28-09-2025"
-    schedule.generate_schedule()

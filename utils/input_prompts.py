@@ -74,5 +74,22 @@ def employee_data_update():
     return {"employee_id": employee_id, "column_name": column_data[column_name_choice], "new_value": new_value}
 
 
+def schedule_data_update():
+    column_data = {"Id kluba": "club_id", "Id zaposlenog": "employee_id", "Pocetak delegacije": "date_in",
+                    "Zavrsetak delegacije": "date_out"}
+
+    column_names = [key for key, value in column_data.items()]
+    hint = f"{column_names[0]}/{column_names[1]}/{column_names[2]}/{column_names[3]}"
+
+    column_name_choice = input(f"Unesite podatak koji zelite izmeniti({hint}): ").capitalize()
+    if column_name_choice == "Id kluba" or column_name_choice == "Id zaposlenog":
+        new_value = int(input("Unesite novu vrednost za izabrani podatak: "))
+    elif column_name_choice == "Pocetak delegacije" or column_name_choice == "Zavrsetak delegacije":
+        new_value = input("Unesite novu vrednost za izabrani podatak(dd-mm-yyyy):")
+
+    return {"column_name": column_data[column_name_choice], "new_value": new_value}
+
+
+
 
 

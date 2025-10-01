@@ -37,12 +37,24 @@ def show_schedule():
     schedule = export.export_complete_actual_schedule_data()
     schedule_table = PrettyTable()
 
-    schedule_table.field_names = ["Naziv kluba", "Ime", "Prezime", "Pozicija", "Delegiran od", "Delegiran do"]
-    print(schedule)
-    for record in schedule:
+    schedule_table.field_names = ["ID rasporeda", "Naziv kluba", "Ime", "Prezime", "Pozicija", "Delegiran od", "Delegiran do"]
 
-        schedule_table.add_row([record["Naziv kluba"], record["Ime"], record["Prezime"],
+    for record in schedule:
+        schedule_table.add_row([record["ID rasporeda"], record["Naziv kluba"], record["Ime"], record["Prezime"],
                                 record["Pozicija"], record["Delegiran od"], record["Delegiran do"]])
 
     print(schedule_table)
+
+def show_selected_record(record_id):
+    selected_record = export.export_schedule_record_by_id(record_id)
+    selected_record_table = PrettyTable()
+
+    selected_record_table.field_names = ["ID kluba", "ID zaposlenog", "Pocetak delegacije", "Zavrsetak delegacije"]
+
+    for record in selected_record:
+        selected_record_table.add_row([record["club_id"], record["employee_id"], record["date_in"], record["date_out"]])
+
+    print(selected_record_table)
+
+
 

@@ -4,8 +4,8 @@ from models.schedule import Schedule
 from utils.input_prompts import (home_prompt, clubs_prompt, employees_prompt,
                                  schedule_prompt, club_addition_prompt, delete_club_selection,
                                  employee_addition_prompt, delete_employee_selection,
-                                 schedule_generation_prompt, employee_data_update)
-from utils.screens import show_list_of_clubs, show_list_of_employees, show_schedule
+                                 schedule_generation_prompt, employee_data_update, schedule_data_update)
+from utils.screens import show_list_of_clubs, show_list_of_employees, show_schedule, show_selected_record
 
 
 is_running = True
@@ -68,8 +68,24 @@ while is_running:
 
     elif user_choice == 3:
         schedule_option_choice = schedule_prompt()
+
         if schedule_option_choice == 1:
             show_schedule()
+
+        elif schedule_option_choice == 2:
+            show_schedule()
+            schedule_record_id = int(input("Unesite ID rasporeda koji zelite da obrisete: "))
+            schedule.delete_schedule_record(schedule_record_id)
+
+        elif schedule_option_choice == 3:
+            show_schedule()
+            schedule_record_id = int(input("Unesite ID rasporeda koji zelite da azuririrate: "))
+            show_selected_record(schedule_record_id)
+            data_for_record_update = schedule_data_update()
+            schedule.update_schedule_record(schedule_record_id, data_for_record_update["column_name"], data_for_record_update["new_value"])
+
+
+
 
     elif user_choice == 4:
         print("Gasenje programa...")

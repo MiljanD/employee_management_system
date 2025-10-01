@@ -41,7 +41,7 @@ class Exporter(Db):
         return current_schedule
 
     def export_complete_actual_schedule_data(self):
-        query = ("SELECT c.club_name AS 'Naziv kluba', "
+        query = ("SELECT s.id AS 'ID rasporeda', c.club_name AS 'Naziv kluba', "
                  "e.first_name AS 'Ime', e.last_name AS 'Prezime', e.role AS 'Pozicija', "
                  "s.date_in AS 'Delegiran od', s.date_out AS 'Delegiran do' "
                  "FROM employee_management_system.schedule s "
@@ -53,6 +53,8 @@ class Exporter(Db):
         return self._execute_query(query)
 
 
-if __name__ == "__main__":
-    export = Exporter()
-    print(export.export_complete_data())
+    def export_schedule_record_by_id(self, record_id):
+        query = "SELECT * FROM employee_management_system.schedule WHERE id=%s"
+
+        return self._execute_query(query, (record_id))
+
