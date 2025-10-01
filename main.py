@@ -72,12 +72,20 @@ while is_running:
 
         elif schedule_option_choice == 2:
             screens.show_schedule()
-            schedule_record_id = int(input("Unesite ID rasporeda koji zelite da obrisete: "))
+            try:
+                schedule_record_id = int(input("Unesite ID rasporeda koji zelite da obrisete: "))
+            except ValueError:
+                print("Unos mora biti broj.")
+                continue
             schedule.delete_schedule_record(schedule_record_id)
 
         elif schedule_option_choice == 3:
             screens.show_schedule()
-            schedule_record_id = int(input("Unesite ID rasporeda koji zelite da azuririrate: "))
+            try:
+                schedule_record_id = int(input("Unesite ID rasporeda koji zelite da azuririrate: "))
+            except ValueError:
+                print("Unos mora biti broj.")
+                continue
             screens.show_selected_record(schedule_record_id)
             data_for_record_update = prompts.schedule_data_update()
             schedule.update_schedule_record(schedule_record_id, data_for_record_update["column_name"], data_for_record_update["new_value"])

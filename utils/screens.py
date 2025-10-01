@@ -28,6 +28,8 @@ class Screens(Exporter):
                 delegation = "Ne"
             elif employee["delegated"] == 1:
                 delegation = "Da"
+            else:
+                delegation = "Ne"
 
             employee_table.add_row([employee["id"], employee["first_name"], employee["last_name"],
                                       employee["role"],delegation])

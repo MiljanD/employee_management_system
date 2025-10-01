@@ -1,3 +1,4 @@
+import pymysql
 from models.db import Db
 
 
@@ -15,24 +16,28 @@ class Club(Db):
 
     @club.setter
     def club(self, club_name):
+        if not club_name or not club_name.strip():
+            raise ValueError("Naziv kluba mora da bude unesen.")
+
         self.__club_name = club_name.capitalize()
 
 
     def add_club(self):
-        with self.con.cursor() as cursor:
-            query = "INSERT INTO employee_management_system.clubs (club_name) VALUES (%s)"
-            cursor.execute(query, (self.__club_name, ))
-            self.con.commit()
+        try:
+            with self.con.cursor() as cursor:
+                query = "INSERT INTO employee_management_system.clubs (club_name) VALUES (%s)"
+                cursor.execute(query, (self.__club_name, ))
+                self.con.commit()
+        except pymysql.MySQLError as e:
+            raise RuntimeError(f"Greska pri dodavanju kluba: {e}")
 
     def delete_club(self, club_id):
-        with self.con.cursor() as cursor:
-            query = "DELETE FROM employee_management_system.clubs WHERE id=%s"
-            cursor.execute(query, (club_id,))
-            self.con.commit()
+        try:
+            with self.con.cursor() as cursor:
+                query = "DELETE FROM employee_management_system.clubs WHERE id=%s"
+                cursor.execute(query, (club_id,))
+                self.con.commit()
+        except pymysql.MySQLError as e:
+            raise RuntimeError(f"Greska pri brisanju kluba: {e}")
 
         return club_id
-
-
-
-if __name__ == "__main__":
-    club = Club()

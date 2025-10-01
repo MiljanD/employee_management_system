@@ -1,5 +1,6 @@
 from models.db import Db
 from datetime import date
+import pymysql
 
 
 class Exporter(Db):
@@ -9,10 +10,13 @@ class Exporter(Db):
 
 
     def _execute_query(self, query, params=None):
-        with self.con.cursor() as cursor:
-            cursor.execute(query, params or ())
-            self.con.commit()
-            return cursor.fetchall()
+        try:
+            with self.con.cursor() as cursor:
+                cursor.execute(query, params or ())
+                self.con.commit()
+                return cursor.fetchall()
+        except pymysql.MySQLError as e:
+            raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
 
 
     def export_all_clubs(self):
@@ -56,5 +60,5 @@ class Exporter(Db):
     def export_schedule_record_by_id(self, record_id):
         query = "SELECT * FROM employee_management_system.schedule WHERE id=%s"
 
-        return self._execute_query(query, (record_id))
+        return self._execute_query(query, (record_id,))
 

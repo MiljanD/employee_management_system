@@ -5,7 +5,7 @@ class InputPrompts:
     def __init__(self):
         self.home_prompt_options = ["Klubovi", "Zaposleni", "Raspored", "Izlaz"]
         self.club_prompt_options = ["Lista klubova", "Dodavanje novih klubova", "Brisanje postojecih klubova"]
-        self.employee_prompt_options = ["Lista zaposlenih", "Dodavanjhe novih zaposlenih", "Brisanje postojecih zaposlenih", "Izmena podataka zaposlenih", "Delegiranje"]
+        self.employee_prompt_options = ["Lista zaposlenih", "Dodavanje novih zaposlenih", "Brisanje postojecih zaposlenih", "Izmena podataka zaposlenih", "Delegiranje"]
         self.schedule_option_prompt = ["Raspored", "Brisanje delegacije", "Azuriranje rasporeda"]
         self.screens = Screens()
 
@@ -77,7 +77,12 @@ class InputPrompts:
         column_data = {"Ime": "first_name", "Prezime": "last_name", "Pozicija": "role"}
         column_names = [key for key, value in column_data.items()]
         hint = f"{column_names[0]}/{column_names[1]}/{column_names[2]}"
+
         column_name_choice = input(f"Unesite podatak koji zelite izmeniti({hint}): ").capitalize()
+
+        if column_name_choice not in column_data:
+            raise ValueError("Uneta kolona nije validna.")
+
         new_value = input("Unesite novu vrednost za izabrani podatak: ").capitalize()
 
         return {"employee_id": employee_id, "column_name": column_data[column_name_choice], "new_value": new_value}
@@ -92,6 +97,9 @@ class InputPrompts:
 
         new_value = None
         column_name_choice = input(f"Unesite podatak koji zelite izmeniti({hint}): ").capitalize()
+        if column_name_choice not in column_data:
+            raise ValueError("Uneta kolona nije validna.")
+
         if column_name_choice == "Id kluba" or column_name_choice == "Id zaposlenog":
             new_value = int(input("Unesite novu vrednost za izabrani podatak: "))
         elif column_name_choice == "Pocetak delegacije" or column_name_choice == "Zavrsetak delegacije":
