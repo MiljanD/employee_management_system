@@ -2,12 +2,22 @@ import pymysql
 
 
 class Db:
+    """
+    Base class for managing database connection.
+    Provides a reusable connection handler for all database-related classes.
+    """
     def __init__(self):
         self.__connection = None
 
 
 
     def _get_connection(self):
+        """
+        Establishes and returns a MySQL database connection.
+        Uses pymysql with dictionary cursor for row access by column name.
+        If connection already exists, returns the existing one.
+        :return: Active pymysql connection object
+        """
         if self.__connection is None:
             try:
                 self.__connection = pymysql.connect(
@@ -24,6 +34,10 @@ class Db:
 
 
     def close_connection(self):
+        """
+        Closes the active database connection if it exists.
+        Resets the internal connection reference to None.
+        """
         if self.__connection:
             self.__connection.close()
             self.__connection = None
