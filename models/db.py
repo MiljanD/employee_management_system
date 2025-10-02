@@ -10,7 +10,6 @@ class Db:
         self.__connection = None
 
 
-
     def _get_connection(self):
         """
         Establishes and returns a MySQL database connection.
