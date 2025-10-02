@@ -3,11 +3,21 @@ from prettytable import PrettyTable
 
 
 class Screens(Exporter):
+    """
+    Class responsible for displaying database records in tabular format.
+    Inherits from Exporter to access data retrieval methods.
+    Uses PrettyTable to render clubs, employees, and schedule data in CLI.
+    """
+
     def __init__(self):
         super().__init__()
 
 
     def show_list_of_clubs(self):
+        """
+        Displays a table of all clubs with their IDs and names.
+        :return: Uses PrettyTable to format the output.
+        """
         club_table = PrettyTable()
         list_of_clubs = self.export_all_clubs()
 
@@ -19,6 +29,11 @@ class Screens(Exporter):
 
 
     def show_list_of_employees(self):
+        """
+        Displays a table of all employees with their details.
+        Includes ID, name, surname, role, and delegation status.
+        Delegation status is shown as 'Da' or 'Ne'.
+        """
         list_of_employees = self.export_all_employees()
         employee_table = PrettyTable()
 
@@ -38,6 +53,11 @@ class Screens(Exporter):
 
 
     def show_schedule(self):
+        """
+        Displays a table of all active schedule records.
+        Includes schedule ID, club name, employee details, and delegation dates.
+        Only shows records where delegation is currently active.
+        """
         schedule = self.export_complete_actual_schedule_data()
         schedule_table = PrettyTable()
 
@@ -50,6 +70,11 @@ class Screens(Exporter):
         print(schedule_table)
 
     def show_selected_record(self, record_id):
+        """
+        Displays a specific schedule record by its ID.
+        Includes club ID, employee ID, start and end dates of delegation.
+        :param record_id: ID of the schedule record to display
+        """
         selected_record = self.export_schedule_record_by_id(record_id)
         selected_record_table = PrettyTable()
 
